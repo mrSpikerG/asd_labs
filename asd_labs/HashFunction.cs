@@ -27,16 +27,16 @@ namespace asd_labs {
         }
 
         // Хеш-функція для рядкових ключів
-        public static int StringHash(string key, int tableSize) {
+        public static double StringHash(string key, int tableSize, int a) {
             if (tableSize <= 0)
                 throw new ArgumentException("Розмір таблиці має бути більше 0.");
 
-            int hash = 0;
-            foreach (char c in key) {
-                hash = (hash * 31 + c) % tableSize; // Можна вибрати інше просте число, наприклад, 31
+            double hash = 0;
+            for (int i =0;i<key.Length;i++) {
+                hash += (key[i] * Math.Pow(a,i)); // Можна вибрати інше просте число, наприклад, 31
             }
 
-            return hash;
+            return hash % tableSize;
         }
    
     }

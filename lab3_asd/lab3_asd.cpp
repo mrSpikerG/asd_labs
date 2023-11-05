@@ -62,29 +62,12 @@ public:
             current = current->next;
         }
 
-        // Поміняти дані першого та останнього елементів
         int tmp = topNode->data;
         topNode->data = current->data;
         current->data = tmp;
     }
 
-        //// Swap the first and last elements by adjusting the pointers.
-        //if (first->next == last) {
-        //    // Special case when there are only two elements.
-        //    last->next = first;
-        //    first->prev = last;
-        //    first->next = nullptr;
-        //    last->prev = nullptr;
-        //    topNode = last;
-        //}
-        //else {
-        //    first->next->prev = last;
-        //    last->prev->next = first;
-        //    std::swap(first->next, last->next);
-        //    std::swap(first->prev, last->prev);
-        //    topNode = last;
-        //}
-    
+
 
     void reverse() {
         Node<T>* prev = nullptr;

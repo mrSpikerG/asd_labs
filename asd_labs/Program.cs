@@ -2,7 +2,7 @@
 using asd_labs;
 
 
-int tableSize = 100;
+int tableSize = 3;
 int keyInt = 10;
 string keyString = "Hello";
 int check = 0;
@@ -28,9 +28,11 @@ do {
         Console.WriteLine($"Хеш-значення для ключа {keyInt} методом множення: {multiplicationHash}");
 
     } else if (check == 3) {        
-        Console.WriteLine("Write key string");
+        Console.WriteLine("Write key string: ");
         keyString = Console.ReadLine();
-        int stringHash = HashFunction.StringHash(keyString, tableSize);
+        Console.WriteLine("Write conststring: ");
+        int const_a = int.Parse(Console.ReadLine());
+        double stringHash = HashFunction.StringHash(keyString, tableSize,const_a);
         Console.WriteLine($"Хеш-значення для рядкового ключа '{keyString}': {stringHash}");
     }
 
