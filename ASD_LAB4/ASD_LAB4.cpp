@@ -1,20 +1,169 @@
-﻿// ASD_LAB4.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+﻿#include <iostream>
 
-#include <iostream>
+class Node {
+public:
+    int data;
+    Node* next;
 
-int main()
-{
-    std::cout << "Hello World!\n";
+    Node(int item) : data(item), next(nullptr) {}
+};
+
+class CustomQueue {
+private:
+    Node* front;
+    Node* back;
+
+public:
+    CustomQueue() : front(nullptr), back(nullptr) {}
+
+    void enqueue(int item) {
+        Node* newNode = new Node(item);
+        if (isEmpty()) {
+            front = newNode;
+            back = newNode;
+        }
+        else {
+            back->next = newNode;
+            back = newNode;
+        }
+    }
+
+    int dequeue() {
+        if (!isEmpty()) {
+            int frontData = front->data;
+            Node* temp = front;
+            front = front->next;
+            delete temp;
+            return frontData;
+        }
+        return -1; 
+    }
+
+    void swapFirstLast() {
+        
+        if (!front || !front->next)
+        {
+            return;
+        }
+
+
+        Node* prev = nullptr;
+        Node* current = front;
+
+        while (current->next)
+        {
+            prev = current;
+            current = current->next;
+        }
+
+        int tmp = front->data;
+        front->data = current->data;
+        current->data = tmp;
+    }
+
+    void reverse() {
+        Node* prev = nullptr;
+        Node* current = front;
+        Node* next = nullptr;
+        back = front;
+        while (current != nullptr) {
+            next = current->next;
+            current->next = prev;
+            prev = current;
+            current = next;
+        }
+        front = prev;
+    }
+
+    bool contains(int element) {
+        Node* temp = front;
+        while (temp != nullptr) {
+            if (temp->data == element) {
+                return true;
+            }
+            temp = temp->next;
+        }
+        return false;
+    }
+
+    void clear() {
+        while (!isEmpty()) {
+            dequeue();
+        }
+    }
+
+    bool isEmpty() {
+        return front == nullptr;
+    }
+
+    void display() {
+        Node* temp = front;
+        while (temp != nullptr) {
+            std::cout << temp->data << " ";
+            temp = temp->next;
+        }
+        std::cout << std::endl;
+    }
+};
+
+int main() {
+    CustomQueue queue;
+    int choice;
+    int item;
+
+    do {
+        std::cout << "1. Add an item to the queue" << std::endl;
+        std::cout << "2. Remove an item from the queue" << std::endl;
+        std::cout << "3. Swap the first and last elements of the queue" << std::endl;
+        std::cout << "4. Reverse the queue" << std::endl;
+        std::cout << "5. Check if a specified element belongs to the queue" << std::endl;
+        std::cout << "6. Remove all items from the queue" << std::endl;
+        std::cout << "7. Display the queue" << std::endl;
+        std::cout << "0. Exit" << std::endl;
+        std::cout << "Select an option: ";
+        std::cin >> choice;
+
+        switch (choice) {
+        case 1:
+            std::cout << "Enter an item to add: ";
+            std::cin >> item;
+            queue.enqueue(item);
+            break;
+        case 2:
+            item = queue.dequeue();
+            if (item != -1) {
+                std::cout << "Removed item: " << item << std::endl;
+            }
+            else {
+                std::cout << "The queue is empty" << std::endl;
+            }
+            break;
+        case 3:
+            queue.swapFirstLast();
+            break;
+        case 4:
+            queue.reverse();
+            break;
+        case 5:
+            std::cout << "Enter an item to check: ";
+            std::cin >> item;
+            if (queue.contains(item)) {
+                std::cout << "The item belongs to the queue" << std::endl;
+            }
+            else {
+                std::cout << "The item does not belong to the queue" << std::endl;
+            }
+            break;
+        case 6:
+            queue.clear();
+            std::cout << "The queue has been cleared" << std::endl;
+            break;
+        case 7:
+            std::cout << "Queue: ";
+            queue.display();
+            break;
+        }
+
+    } while (choice != 0);
+    return 0;
 }
-
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
