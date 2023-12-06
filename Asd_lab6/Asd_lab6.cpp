@@ -85,7 +85,7 @@ public:
 
 int main() {
     // Створення хеш-таблиці розміром 10
-    HashTable hashTable(10);
+    HashTable hashTable(3);
 
     int choice;
     std::string key, value;
@@ -131,3 +131,4 @@ int main() {
 
     return 0;
 }
+// getList

@@ -1,8 +1,7 @@
-﻿// See https://aka.ms/new-console-template for more information
-using asd_labs;
+﻿using asd_labs;
 
 
-int tableSize = 3;
+int tableSize = 7;
 int keyInt = 10;
 string keyString = "Hello";
 int check = 0;
@@ -30,7 +29,7 @@ do {
     } else if (check == 3) {        
         Console.WriteLine("Write key string: ");
         keyString = Console.ReadLine();
-        Console.WriteLine("Write conststring: ");
+        Console.WriteLine("Write constint: ");
         int const_a = int.Parse(Console.ReadLine());
         double stringHash = HashFunction.StringHash(keyString, tableSize,const_a);
         Console.WriteLine($"Хеш-значення для рядкового ключа '{keyString}': {stringHash}");
