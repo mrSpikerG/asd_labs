@@ -22,19 +22,36 @@ public:
         return hashFunc(key) % tableSize;
     }
 
-    void addEntry(const std::string& key, const std::string& value) {
+    bool keyExists(const std::string& key) {
         size_t index = hashFunction(key);
 
         while (occupied[index]) {
-            index = (index + 1) % tableSize; 
- 
+            if (keys[index] == key) {
+                return true;
+            }
+            index = (index + 1) % tableSize;
+        }
+
+        return false;
+    }
+
+    void addEntry(const std::string& key, const std::string& value) {
+        if (keyExists(key)) {
+            std::cout << "Key already exists. Cannot add duplicate key.\n";
+            return;
+        }
+
+        size_t index = hashFunction(key);
+
+        while (occupied[index]) {
+            index = (index + 1) % tableSize;
         }
 
         keys[index] = key;
         values[index] = value;
         occupied[index] = true;
 
-        std::cout << "Element added successfully." << std::endl;
+        std::cout << "Element added successfully.\n";
     }
 
     void removeEntry(const std::string& key) {
@@ -67,6 +84,15 @@ public:
         }
 
         return "Not found";
+    }
+    void displayAllEntries() {
+        std::cout << "\nAll Entries:\n";
+        for (int i = 0; i < tableSize; ++i) {
+            if (occupied[i]) {
+                std::cout << "Key: " << keys[i] << ", Value: " << values[i] << std::endl;
+            }
+        }
+        std::cout << "End of Entries\n";
     }
 };
 
@@ -108,13 +134,16 @@ int main() {
             break;
 
         case 4:
-            std::cout << "Exiting program.\n";
+            hashTable.displayAllEntries();
             break;
 
+        case 5:
+            std::cout << "Exiting program.\n";
+            break;
         default:
             std::cout << "Invalid choice. Please try again.\n";
         }
-    } while (choice != 4);
+    } while (choice !=5);
 
     return 0;
 }

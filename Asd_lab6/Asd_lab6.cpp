@@ -27,6 +27,18 @@ public:
 
     void addEntry(const std::string& key, const std::string& value) {
         size_t index = hashFunction(key);
+        HashTableEntry* current = table[index];
+
+        while (current != nullptr) {
+            if (current->key == key) {
+                // Если элемент с таким ключом уже существует, обновляем его значение
+                current->value = value;
+                return;
+            }
+            current = current->next;
+        }
+
+        // Если элемент с данным ключом не найден, добавляем новый элемент в начало списка
         HashTableEntry* newEntry = new HashTableEntry(key, value);
         newEntry->next = table[index];
         table[index] = newEntry;
@@ -70,6 +82,16 @@ public:
         return "Not found";
     }
 
+    void showAllElements() {
+        for (int i = 0; i < size; ++i) {
+            HashTableEntry* current = table[i];
+            while (current != nullptr) {
+                std::cout << "Key: " << current->key << ", Value: " << current->value << std::endl;
+                current = current->next;
+            }
+        }
+    }
+
     ~HashTable() {
         for (int i = 0; i < size; ++i) {
             HashTableEntry* current = table[i];
@@ -95,7 +117,8 @@ int main() {
         std::cout << "1. Add Entry\n";
         std::cout << "2. Remove Entry\n";
         std::cout << "3. Get Value\n";
-        std::cout << "4. Exit\n";
+        std::cout << "4. Show All Elements\n";
+        std::cout << "5. Exit\n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
 
@@ -121,14 +144,16 @@ int main() {
             break;
 
         case 4:
+            std::cout << "\nAll Elements:\n";
+            hashTable.showAllElements();
+            break;
+        case 5:
             std::cout << "Exiting program.\n";
             break;
-
         default:
             std::cout << "Invalid choice. Please try again.\n";
         }
-    } while (choice != 4);
+    } while (choice != 5);
 
     return 0;
 }
-// getList
