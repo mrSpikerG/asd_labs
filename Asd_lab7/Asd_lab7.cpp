@@ -4,25 +4,25 @@
 class HashTable {
 private:
     static const int tableSize = 10;
-    std::string keys[tableSize];
+    int keys[tableSize];
     std::string values[tableSize];
     bool occupied[tableSize];
 
 public:
     HashTable() {
         for (int i = 0; i < tableSize; ++i) {
-            keys[i] = "";
+            keys[i] = 0;
             values[i] = "";
             occupied[i] = false;
         }
     }
 
-    size_t hashFunction(const std::string& key) {
-        std::hash<std::string> hashFunc;
+    size_t hashFunction(int& key) {
+        std::hash<int> hashFunc;
         return hashFunc(key) % tableSize;
     }
 
-    bool keyExists(const std::string& key) {
+    bool keyExists(int& key) {
         size_t index = hashFunction(key);
 
         while (occupied[index]) {
@@ -35,31 +35,58 @@ public:
         return false;
     }
 
-    void addEntry(const std::string& key, const std::string& value) {
+    void addEntry(int& key,  std::string& value) {
+        size_t index = hashFunction(key);
         if (keyExists(key)) {
             std::cout << "Key already exists. Cannot add duplicate key.\n";
-            return;
+            while (occupied[index]) {
+                index = (index + 1) % tableSize; // Ищем следующую свободную ячейку
+            }
         }
 
-        size_t index = hashFunction(key);
 
         while (occupied[index]) {
             index = (index + 1) % tableSize;
         }
 
-        keys[index] = key;
+        keys[index] = index;
         values[index] = value;
         occupied[index] = true;
 
         std::cout << "Element added successfully.\n";
     }
+    void resize() {
+        int newSize = size * 2;
 
-    void removeEntry(const std::string& key) {
+        Pair** newTable = new Pair * [newSize];
+
+        for (int i = 0; i < newSize; i++) {
+            newTable[i] = new Pair();
+        }
+
+        for (int i = 0; i < size; i++) {
+            if (table[i]) {
+                int hash = divisionHash(table[i]->key, newSize);
+                while (!newTable[hash]->isDeleted) {
+                    hash = divisionHash(hash + 1, newSize);
+                }
+                newTable[hash] = table[i];
+            }
+        }
+
+        size = newSize;
+        freeSpace = size / 2;
+        delete[] table;
+        table = newTable;
+    }
+
+
+    void removeEntry( int& key) {
         size_t index = hashFunction(key);
 
         while (occupied[index]) {
             if (keys[index] == key) {
-                keys[index] = "";
+                keys[index] = 0;
                 values[index] = "";
                 occupied[index] = false;
                 std::cout << "Element removed successfully." << std::endl;
@@ -72,7 +99,7 @@ public:
         std::cout << "Element not found." << std::endl;
     }
 
-    std::string getValue(const std::string& key) {
+    std::string getValue( int& key) {
         size_t index = hashFunction(key);
 
         while (occupied[index]) {
@@ -101,14 +128,16 @@ int main() {
     HashTable hashTable;
 
     int choice;
-    std::string key, value;
+    std::string value;
+    int key;
 
     do {
         std::cout << "\nMenu:\n";
         std::cout << "1. Add Entry\n";
         std::cout << "2. Remove Entry\n";
         std::cout << "3. Get Value\n";
-        std::cout << "4. Exit\n";
+        std::cout << "4. Show\n";
+        std::cout << "5. Exit\n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
 

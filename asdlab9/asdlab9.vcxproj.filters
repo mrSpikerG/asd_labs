@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Downloads\asd_lab8.cpp">
+    <ClCompile Include="asdlab9.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

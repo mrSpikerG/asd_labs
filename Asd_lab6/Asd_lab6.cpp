@@ -1,159 +1,164 @@
 ﻿#include <iostream>
 #include <string>
 
-
+using namespace std;
 class HashTableEntry {
 public:
-    std::string key;
-    std::string value;
-    HashTableEntry* next;
+	int key;
+	std::string value;
+	HashTableEntry* next;
 
-    HashTableEntry(const std::string& k, const std::string& v) : key(k), value(v), next(nullptr) {}
+	HashTableEntry(int& k, std::string& v) : key(k), value(v), next(nullptr) {}
 };
 
 
 class HashTable {
 private:
-    int size;
-    HashTableEntry** table;
+	int size;
+	HashTableEntry** table;
 
 public:
-    HashTable(int s) : size(s), table(new HashTableEntry* [size]()) {}
+	HashTable(int s) : size(s), table(new HashTableEntry* [size]()) {}
 
-    size_t hashFunction(const std::string& key) {
-        std::hash<std::string> hashFunc;
-        return hashFunc(key) % size;
-    }
+	size_t hashFunction(int& key) {
+		std::hash<int> hashFunc;
+		return hashFunc(key) % size;
+	}
 
-    void addEntry(const std::string& key, const std::string& value) {
-        size_t index = hashFunction(key);
-        HashTableEntry* current = table[index];
+	void addEntry(int& key, std::string& value) {
+		size_t index = hashFunction(key);
+		if (table[index] == nullptr) {
+			table[index] = new HashTableEntry(key, value);
+		}
+		else {
+			HashTableEntry* current = table[index];
+			while (current->key != key && current->value != value && current->next != nullptr) {
+				current = current->next;
+			}
+			current->next = new HashTableEntry(key, value);
+		}
 
-        while (current != nullptr) {
-            if (current->key == key) {
-                // Если элемент с таким ключом уже существует, обновляем его значение
-                current->value = value;
-                return;
-            }
-            current = current->next;
-        }
+		
+	}
 
-        // Если элемент с данным ключом не найден, добавляем новый элемент в начало списка
-        HashTableEntry* newEntry = new HashTableEntry(key, value);
-        newEntry->next = table[index];
-        table[index] = newEntry;
-    }
+	void removeEntry(int& key) {
+		size_t index = hashFunction(key);
+		HashTableEntry* current = table[index];
+		HashTableEntry* prev = nullptr;
 
-    void removeEntry(const std::string& key) {
-        size_t index = hashFunction(key);
-        HashTableEntry* current = table[index];
-        HashTableEntry* prev = nullptr;
+		while (current != nullptr && current->key != key) {
+			prev = current;
+			current = current->next;
+		}
 
-        while (current != nullptr && current->key != key) {
-            prev = current;
-            current = current->next;
-        }
+		if (current == nullptr) {
+			return;
+		}
 
-        if (current == nullptr) {
-            return; 
-        }
+		if (prev == nullptr) {
+			table[index] = current->next;
+		}
+		else {
+			prev->next = current->next;
+		}
 
-        if (prev == nullptr) {
-            table[index] = current->next;
-        }
-        else {
-            prev->next = current->next;
-        }
+		delete current;
+	}
 
-        delete current;
-    }
+	std::string getValue(int& key) {
+		size_t index = hashFunction(key);
+		HashTableEntry* current = table[index];
 
-    std::string getValue(const std::string& key) {
-        size_t index = hashFunction(key);
-        HashTableEntry* current = table[index];
+		while (current != nullptr) {
+			if (current->key == key) {
+				return current->value;
+			}
+			current = current->next;
+		}
 
-        while (current != nullptr) {
-            if (current->key == key) {
-                return current->value;
-            }
-            current = current->next;
-        }
+		return "Not found";
+	}
 
-        return "Not found";
-    }
 
-    void showAllElements() {
-        for (int i = 0; i < size; ++i) {
-            HashTableEntry* current = table[i];
-            while (current != nullptr) {
-                std::cout << "Key: " << current->key << ", Value: " << current->value << std::endl;
-                current = current->next;
-            }
-        }
-    }
+	void showElement() {
+		for (int i = 0; i < size; i++) {
+			if (table[i]!=nullptr) {
+				cout << "[" << table[i]->key << "]" << table[i]->value << endl;
+			}
+			else {
+				cout << "Empty " << endl;
+			}
 
-    ~HashTable() {
-        for (int i = 0; i < size; ++i) {
-            HashTableEntry* current = table[i];
-            while (current != nullptr) {
-                HashTableEntry* next = current->next;
-                delete current;
-                current = next;
-            }
-        }
-        delete[] table;
-    }
+		}
+		cout << endl;
+	}
+
+
+	~HashTable() {
+		for (int i = 0; i < size; ++i) {
+			HashTableEntry* current = table[i];
+			while (current != nullptr) {
+				HashTableEntry* next = current->next;
+				delete current;
+				current = next;
+			}
+		}
+		delete[] table;
+	}
 };
 
 int main() {
-    // Створення хеш-таблиці розміром 10
-    HashTable hashTable(3);
 
-    int choice;
-    std::string key, value;
+	HashTable hashTable(3);
 
-    do {
-        std::cout << "\nMenu:\n";
-        std::cout << "1. Add Entry\n";
-        std::cout << "2. Remove Entry\n";
-        std::cout << "3. Get Value\n";
-        std::cout << "4. Show All Elements\n";
-        std::cout << "5. Exit\n";
-        std::cout << "Enter your choice: ";
-        std::cin >> choice;
+	int choice;
+	std::string value;
+	int key;
 
-        switch (choice) {
-        case 1:
-            std::cout << "Enter key: ";
-            std::cin >> key;
-            std::cout << "Enter value: ";
-            std::cin >> value;
-            hashTable.addEntry(key, value);
-            break;
+	do {
+		std::cout << "\nMenu:\n";
+		std::cout << "1. Add\n";
+		std::cout << "2. Remove \n";
+		std::cout << "3. Get \n";
+		std::cout << "4. Show Elements\n";
+		std::cout << "5. Exit\n";
+		std::cout << "Enter your choice: ";
+		std::cin >> choice;
 
-        case 2:
-            std::cout << "Enter key to remove: ";
-            std::cin >> key;
-            hashTable.removeEntry(key);
-            break;
+		switch (choice) {
+		case 1:
+			std::cout << "Enter key: ";
+			std::cin >> key;
+			std::cout << "Enter value: ";
+			std::cin >> value;
+			hashTable.addEntry(key, value);
+			break;
 
-        case 3:
-            std::cout << "Enter key to get value: ";
-            std::cin >> key;
-            std::cout << "Value: " << hashTable.getValue(key) << std::endl;
-            break;
+		case 2:
+			std::cout << "Enter key to remove: ";
+			std::cin >> key;
+			hashTable.removeEntry(key);
+			break;
 
-        case 4:
-            std::cout << "\nAll Elements:\n";
-            hashTable.showAllElements();
-            break;
-        case 5:
-            std::cout << "Exiting program.\n";
-            break;
-        default:
-            std::cout << "Invalid choice. Please try again.\n";
-        }
-    } while (choice != 5);
+		case 3:
+			std::cout << "Enter key to get value: ";
+			std::cin >> key;
+			std::cout << "Value: " << hashTable.getValue(key) << std::endl;
+			break;
 
-    return 0;
+		case 4:
+			std::cout << "\nAll Elements:\n";
+			hashTable.showElement();
+			break;
+		case 5:
+			std::cout << "Exiting program.\n";
+			break;
+		default:
+			std::cout << "Invalid choice. Please try again.\n";
+		}
+	} while (choice != 5);
+
+	return 0;
 }
+
+//collision додавання в ланцюжок
