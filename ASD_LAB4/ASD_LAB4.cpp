@@ -1,23 +1,23 @@
 ﻿#include <iostream>
 
-class Node {
+class TreeNode {
 public:
     int data;
-    Node* next;
+    TreeNode* next;
 
-    Node(int item) : data(item), next(nullptr) {}
+    TreeNode(int item) : data(item), next(nullptr) {}
 };
 
 class CustomQueue {
 private:
-    Node* front;
-    Node* back;
+    TreeNode* front;
+    TreeNode* back;
 
 public:
     CustomQueue() : front(nullptr), back(nullptr) {}
 
     void enqueue(int item) {
-        Node* newNode = new Node(item);
+        TreeNode* newNode = new TreeNode(item);
         if (isEmpty()) {
             front = newNode;
             back = newNode;
@@ -31,7 +31,7 @@ public:
     int dequeue() {
         if (!isEmpty()) {
             int frontData = front->data;
-            Node* temp = front;
+            TreeNode* temp = front;
             front = front->next;
             delete temp;
             return frontData;
@@ -47,8 +47,8 @@ public:
         }
 
 
-        Node* prev = nullptr;
-        Node* current = front;
+        TreeNode* prev = nullptr;
+        TreeNode* current = front;
 
         while (current->next)
         {
@@ -62,9 +62,9 @@ public:
     }
 
     void reverse() {
-        Node* prev = nullptr;
-        Node* current = front;
-        Node* next = nullptr;
+        TreeNode* prev = nullptr;
+        TreeNode* current = front;
+        TreeNode* next = nullptr;
         back = front;
         while (current != nullptr) {
             next = current->next;
@@ -76,7 +76,7 @@ public:
     }
 
     bool contains(int element) {
-        Node* temp = front;
+        TreeNode* temp = front;
         while (temp != nullptr) {
             if (temp->data == element) {
                 return true;
@@ -97,7 +97,7 @@ public:
     }
 
     void display() {
-        Node* temp = front;
+        TreeNode* temp = front;
         while (temp != nullptr) {
             std::cout << temp->data << " ";
             temp = temp->next;
